@@ -1,7 +1,6 @@
 package com.example.demo.dto;
 
 import com.example.demo.model.CampainStatus;
-import com.example.demo.model.Product;
 import com.example.demo.model.Town;
 import lombok.*;
 
@@ -13,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class CampainDTO {
+public class CampaignDTO {
     private String name;
     private BigDecimal bidAmount;
     private BigDecimal campaignFund;
@@ -21,5 +20,5 @@ public class CampainDTO {
     private Town town;
     private int radius;
     private List<String> keywords;
-    private Long productId;
+    private ProductDTO productDTO;
 }
