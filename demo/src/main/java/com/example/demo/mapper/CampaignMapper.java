@@ -17,7 +17,7 @@ public class CampaignMapper {
                 .status(campaign.getStatus())
                 .campaignFund(campaign.getCampaignFund())
                 .keywords(campaign.getKeywords())
-                .product(campaign.getProduct())
+                .productId(campaign.getProduct().getId())
                 .build();
 
     }

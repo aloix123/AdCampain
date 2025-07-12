@@ -21,5 +21,5 @@ public class CampainDTO {
     private Town town;
     private int radius;
     private List<String> keywords;
-    private Product product;
+    private Long productId;
 }
