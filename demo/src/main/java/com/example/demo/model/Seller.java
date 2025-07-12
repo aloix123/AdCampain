@@ -24,4 +24,9 @@ public class Seller {
     private String name;
 
     private BigDecimal emeraldBalance;
+
+    public Seller(String name, BigDecimal emeraldBalance) {
+        this.name = name;
+        this.emeraldBalance = emeraldBalance;
+    }
 }
