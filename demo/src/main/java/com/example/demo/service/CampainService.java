@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.CampaignDTO;
 import com.example.demo.dto.CampaignRequestDTO;
+import com.example.demo.exception.ProductDataIsInwalidException;
 import com.example.demo.mapper.CampaignMapper;
 import com.example.demo.model.Campaign;
 import com.example.demo.model.Product;
@@ -28,10 +29,16 @@ public class CampainService {
 
     public void createAdCampaign(CampaignRequestDTO dto) {
         Product product = productService.findById(dto.getProductDTO().getId());
-        Campaign campaign=CampaignMapper.toEntity(dto);
-        campaign.setProduct(product);
-        sellerService.updateSellerAccountBySellerId(product.getSeller().getId(),campaign.getCampaignFund());
-        campaignRepository.save(campaign);
+        if(productService.checkIfProductIsUnchanged(product,dto.getProductDTO())){
+            Campaign campaign=CampaignMapper.toEntity(dto);
+            campaign.setProduct(product);
+            sellerService.updateSellerAccountBySellerId(product.getSeller().getId(),campaign.getCampaignFund());
+            campaignRepository.save(campaign);
+        }
+        else{
+            throw new ProductDataIsInwalidException();
+        }
+
     }
 
     public void deleteCampaignById(Long id) {

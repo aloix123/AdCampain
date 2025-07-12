@@ -1,7 +1,5 @@
 package com.example.demo.model;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -25,17 +23,17 @@ public class Campaign {
     private String name;
 
     @NotNull(message = "Bid amount is required")
-    @DecimalMin(value = "1.00", message = "Bid amount must be at least 1")
+    @DecimalMin(value = "0.01", message = "Bid amount must be at least 0.01")
     private BigDecimal bidAmount;
 
     @NotNull(message = "Campaign fund is required")
     @DecimalMin(value = "1.00", message = "Campaign fund must be at least 1")
     private BigDecimal campaignFund;
 
-    @NotNull(message = "Campaign status is required")
+    @NotNull(message = "Status is required")
     private CampainStatus status;
 
-    @NotNull(message = "You need to choose a town")
+    @NotNull(message = "Town is required")
     private Town town;
 
     @Min(value = 1, message = "Radius must be at least 1 km")

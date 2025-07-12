@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ProductDTO;
 import com.example.demo.model.Product;
 import com.example.demo.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -12,5 +13,11 @@ public class ProductService {
     public Product findById(Long id){
         return productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+    }
+
+    public boolean checkIfProductIsUnchanged(Product product, ProductDTO dto){
+        return product.getId().equals(dto.getId()) && product.getName().equals(dto.getName())
+                && product.getSeller().getId().equals(dto.getSellerId());
+
     }
 }
