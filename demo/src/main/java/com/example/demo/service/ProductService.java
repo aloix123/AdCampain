@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 public class ProductService {
     private ProductRepository productRepository;
 
-    public Product findByName(String name){
-        return productRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Product not found with name: " + name));
+    public Product findById(Long id){
+        return productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
     }
 }

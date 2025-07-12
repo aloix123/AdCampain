@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 @Builder
 @NoArgsConstructor
 public class ProductDTO {
-    @UniqueElements
+    private Long id;
     private String name;
     private Long sellerId;
 }

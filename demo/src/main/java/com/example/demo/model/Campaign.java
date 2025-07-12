@@ -4,9 +4,7 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -18,29 +16,39 @@ import java.util.List;
 @Setter
 @Entity
 public class Campaign {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @NotNull(message = "you need to provide name of campain")
+
+    @NotBlank(message = "Campaign name is required")
     private String name;
-    @NotNull(message = "you need to provice bidamount")
-    @DecimalMin(value="1",message = "amount must be at least 1 dollar please")
+
+    @NotNull(message = "Bid amount is required")
+    @DecimalMin(value = "1.00", message = "Bid amount must be at least 1")
     private BigDecimal bidAmount;
-    @NotNull
+
+    @NotNull(message = "Campaign fund is required")
+    @DecimalMin(value = "1.00", message = "Campaign fund must be at least 1")
     private BigDecimal campaignFund;
-    @NotNull(message = "you need to set your town status")
+
+    @NotNull(message = "Campaign status is required")
     private CampainStatus status;
-    @NotNull(message = "you need to choose proper town")
+
+    @NotNull(message = "You need to choose a town")
     private Town town;
-    @NotNull(message = "radius is required")
-    @DecimalMax(value = "40075",message = "radius cannot be grater than circumference of earth")
+
+    @Min(value = 1, message = "Radius must be at least 1 km")
+    @Max(value = 40075, message = "Radius cannot exceed Earth's circumference")
     private int radius;
 
     @ElementCollection
-    @Nullable
+    @NotEmpty(message = "At least one keyword is required")
     private List<String> keywords;
+
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @NotNull(message = "you need to choose product you want to advertise")
+    @NotNull(message = "You must choose a product to advertise")
     private Product product;
 }
+

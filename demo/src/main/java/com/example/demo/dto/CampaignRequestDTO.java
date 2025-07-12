@@ -12,8 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class CampaignDTO {
-    private Long id;
+public class CampaignRequestDTO {
     private String name;
     private BigDecimal bidAmount;
     private BigDecimal campaignFund;
