@@ -6,6 +6,7 @@ import com.example.demo.exception.ProductDataIsInwalidException;
 import com.example.demo.mapper.CampaignMapper;
 import com.example.demo.model.Campaign;
 import com.example.demo.model.Product;
+import com.example.demo.model.Town;
 import com.example.demo.repository.CampaignRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -13,7 +14,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -27,13 +30,14 @@ public class CampainService {
         return CampaignMapper.toDtos(campaigns);
     }
 
-    public void createAdCampaign(CampaignRequestDTO dto) {
+    public CampaignDTO createAdCampaign(CampaignRequestDTO dto) {
         Product product = productService.findById(dto.getProductDTO().getId());
         if(productService.checkIfProductIsUnchanged(product,dto.getProductDTO())){
             Campaign campaign=CampaignMapper.toEntity(dto);
             campaign.setProduct(product);
             sellerService.updateSellerAccountBySellerId(product.getSeller().getId(),campaign.getCampaignFund());
             campaignRepository.save(campaign);
+            return CampaignMapper.toDTO(campaign);
         }
         else{
             throw new ProductDataIsInwalidException();
@@ -46,11 +50,13 @@ public class CampainService {
         campaignRepository.deleteById(id);
     }
 
-    public void updateCampaign(@Valid CampaignDTO dto) {
+    public CampaignDTO updateCampaign(@Valid CampaignDTO dto) {
         Campaign existingCampaign = findById(dto.getId());
         Product product = productService.findById(dto.getProductDTO().getId());
         CampaignMapper.updateEntity(existingCampaign,dto,product);
         campaignRepository.save(existingCampaign);
+        return CampaignMapper.toDTO(existingCampaign);
+
     }
 
     public Campaign findById(Long id){
@@ -73,4 +79,9 @@ public class CampainService {
         );
     }
 
+    public List<String> getAllTowns() {
+        return Arrays.stream(Town.values())
+                .map(Enum::name) // Converts each enum constant to its string name
+                .collect(Collectors.toList());
+    }
 }

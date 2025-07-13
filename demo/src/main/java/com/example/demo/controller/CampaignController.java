@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @AllArgsConstructor
@@ -15,6 +16,7 @@ import java.util.List;
 @RequestMapping("api/v1/campaign")
 public class CampaignController {
     private CampainService campainService;
+
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -24,8 +26,8 @@ public class CampaignController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCampaign(@Valid @RequestBody CampaignRequestDTO dto){
-        campainService.createAdCampaign(dto);
+    public CampaignDTO createCampaign(@Valid @RequestBody CampaignRequestDTO dto){
+        return campainService.createAdCampaign(dto);
     }
 
     @DeleteMapping("/{id}")
@@ -36,8 +38,8 @@ public class CampaignController {
 
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
-    public void updateCampaignBy(@Valid @RequestBody CampaignDTO dto){
-        campainService.updateCampaign(dto);
+    public CampaignDTO updateCampaignBy(@Valid @RequestBody CampaignDTO dto){
+        return campainService.updateCampaign(dto);
     }
 
     @GetMapping("/keyword")
@@ -45,5 +47,13 @@ public class CampaignController {
     public List<String> returnAllKeyWords(){
        return campainService.getAllKeyWordsList();
     }
+
+    @GetMapping("/town")
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> returnAllTowns(){
+        return campainService.getAllTowns();
+    }
+
+
 
 }

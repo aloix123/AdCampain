@@ -40,4 +40,11 @@ public class SellerService {
         );
     }
 
+    public BigDecimal increaseAccountValue(Long id) {
+        BigDecimal defaultMoneyIncrease=BigDecimal.valueOf(1000);
+        Seller seller=sellerRepository.getSellerById(id).orElseThrow();
+        seller.setEmeraldBalance(seller.getEmeraldBalance().add(defaultMoneyIncrease));
+        sellerRepository.save(seller);
+        return  seller.getEmeraldBalance();
+    }
 }

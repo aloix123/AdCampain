@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,5 +25,12 @@ public class SellerController {
     @ResponseStatus(HttpStatus.OK)
     public SellerDTO getSellerById(@PathVariable Long id){
         return sellerService.getById(id);
+    }
+
+    @PutMapping("/money/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public BigDecimal increaseEmeraldAccount(@PathVariable Long id){
+        return sellerService.increaseAccountValue(id);
+
     }
 }

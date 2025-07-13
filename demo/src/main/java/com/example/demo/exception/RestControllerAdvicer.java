@@ -3,6 +3,7 @@ package com.example.demo.exception;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -10,42 +11,49 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class RestControllerAdvicer {
+
     @ExceptionHandler(NoMoneyException.class)
-    public ResponseEntity<String> handleNoMoneyException(NoMoneyException ex) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body("Insufficient funds: " + ex.getMessage());
+    public ResponseEntity<ApiExceptionResponse> handleNoMoneyException(NoMoneyException ex, HttpServletRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Insufficient funds: " + ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, errors, request.getRequestURI());
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException ex) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body("Entity not found: " + ex.getMessage());
+    public ResponseEntity<ApiExceptionResponse> handleEntityNotFoundException(EntityNotFoundException ex, HttpServletRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Entity not found: " + ex.getMessage());
+        return buildErrorResponse(HttpStatus.NOT_FOUND, errors, request.getRequestURI());
     }
-
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationErrors(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+    public ResponseEntity<ApiExceptionResponse> handleValidationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        Map<String, String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .collect(Collectors.toMap(
+                        fieldError -> fieldError.getField(),
+                        fieldError -> fieldError.getDefaultMessage(),
+                        (existing, replacement) -> existing
+                ));
 
-        ex.getBindingResult().getFieldErrors().forEach(error -> {
-            errors.put(error.getField(), error.getDefaultMessage());
-        });
+        ApiExceptionResponse errorResponse = new ApiExceptionResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                errors,
+                request.getRequestURI()
+        );
 
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity.badRequest().body(errorResponse);
     }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, String>> handleEnumBindingErrors(HttpMessageNotReadableException ex) {
+    public ResponseEntity<ApiExceptionResponse> handleEnumBindingErrors(HttpMessageNotReadableException ex, HttpServletRequest request) {
         Map<String, String> errors = new HashMap<>();
 
         Throwable cause = ex.getCause();
@@ -61,13 +69,30 @@ public class RestControllerAdvicer {
                             .map(Object::toString)
                             .collect(Collectors.joining(", "));
                     errors.put(fieldName, "Invalid value. Allowed: " + allowed);
-                    return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+                    return buildErrorResponse(HttpStatus.BAD_REQUEST, errors, request.getRequestURI());
                 }
             }
         }
 
         errors.put("error", "Malformed request");
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, errors, request.getRequestURI());
     }
 
+    // Generic fallback for all other exceptions, same ApiErrorResponse format
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiExceptionResponse> handleGenericException(Exception ex, HttpServletRequest request) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", "Unexpected error: " + ex.getMessage());
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, errors, request.getRequestURI());
+    }
+
+    private ResponseEntity<ApiExceptionResponse> buildErrorResponse(HttpStatus status, Map<String, String> errors, String path) {
+        ApiExceptionResponse errorResponse = new ApiExceptionResponse(
+                status.value(),
+                status.getReasonPhrase(),
+                errors,
+                path
+        );
+        return ResponseEntity.status(status).body(errorResponse);
+    }
 }

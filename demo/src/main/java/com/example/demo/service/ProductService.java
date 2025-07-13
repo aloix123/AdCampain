@@ -7,6 +7,9 @@ import com.example.demo.model.Product;
 import com.example.demo.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @AllArgsConstructor
 @Service
 public class ProductService {
@@ -25,5 +28,9 @@ public class ProductService {
         return product.getId().equals(dto.getId()) && product.getName().equals(dto.getName())
                 && product.getSeller().getId().equals(dto.getSellerId());
 
+    }
+
+    public List<ProductDTO> findAllBySellerId(Long sellerId) {
+        return ProductMapper.toDTOs(productRepository.findBySellerId(sellerId));
     }
 }
