@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.SellerDTO;
 import com.example.demo.exception.NoMoneyException;
+import com.example.demo.mapper.SellerMapper;
 import com.example.demo.model.Seller;
 import com.example.demo.repository.SellerRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -8,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -24,6 +27,17 @@ public class SellerService {
         }
         seller.setEmeraldBalance(newBalance);
         sellerRepository.save(seller);
+    }
+
+    public List<SellerDTO> getAll() {
+         return SellerMapper.toDTOs(sellerRepository.getAll());
+    }
+
+    public SellerDTO getById(Long id) {
+        return SellerMapper.toDTO(
+                sellerRepository.getSellerById(id)
+                        .orElseThrow(() -> new EntityNotFoundException("Seller not found with id: " + id))
+        );
     }
 
 }

@@ -7,13 +7,10 @@ public class ProductMapper {
     public static ProductDTO toDTO(Product product){
         return ProductDTO.builder()
                 .name(product.getName())
+                .id(product.getId())
                 .sellerId(product.getId())
                 .build();
     }
 
-    public static Product toEntity(ProductDTO dto){
-        return Product.builder()
-                .name(dto.getName())
-                .build();
-    }
+
 }
