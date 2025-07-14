@@ -1,5 +1,3 @@
-
-
 package com.example.demo.config;
 
 // CorsConfig.java
@@ -17,11 +15,12 @@ public class CorsConfig {
 
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*")
-                        .allowedHeaders("*");
+                registry.addMapping("/**")        // Allow CORS on all endpoints
+                        .allowedOrigins("*")      // Allow all origins
+                        .allowedMethods("*")      // Allow all HTTP methods (GET, POST, etc.)
+                        .allowedHeaders("*");     // Allow all headers
             }
         };
     }
 }
+

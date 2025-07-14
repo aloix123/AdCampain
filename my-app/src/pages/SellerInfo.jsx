@@ -5,7 +5,7 @@ export default function SellerInfo({ seller, balance, setBalance, refresh }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [localSeller, setLocalSeller] = useState(seller);
-  const API_URL = 'http://localhost:8080';
+  const API_URL = process.env.REACT_APP_BACKEND_URL;
 
   // Refetch seller data when 'refresh' changes
   useEffect(() => {

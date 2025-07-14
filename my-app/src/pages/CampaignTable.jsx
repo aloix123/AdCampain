@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export default function CampaignTable({ campaigns, onDelete }) {
   const [deletingId, setDeletingId] = useState(null);
-  const API_URL = 'http://localhost:8080';
+  const API_URL = process.env.REACT_APP_BACKEND_URL;
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this campaign?")) return;
