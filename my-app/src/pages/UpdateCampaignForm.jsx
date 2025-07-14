@@ -9,7 +9,7 @@ export default function UpdateCampaignForm({ campaigns, products, onUpdateCampai
   const [townsList, setTownsList] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  const API_URL = 'http://localhost:8080';
+  const API_URL = process.env.REACT_APP_BACKEND_URL;
 
   // Fetch keywords & towns
   useEffect(() => {
