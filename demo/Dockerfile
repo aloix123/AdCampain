@@ -1,15 +1,27 @@
+# Stage 1: Build the app
+FROM gradle:8.5-jdk21 AS builder
 
-# Use Amazon Corretto 21 as base image
+# Set working directory
+WORKDIR /home/app
+
+# Copy only necessary files for caching
+COPY gradle gradle
+COPY gradlew build.gradle settings.gradle ./
+
+# Copy the source code
+COPY src src
+
+# Build the fat JAR (for Spring Boot or Shadow plugin)
+RUN ./gradlew bootJar --no-daemon
+
+# Stage 2: Run the app using Amazon Corretto
 FROM amazoncorretto:21
 
-# Optional: temp dir for JVM
-VOLUME /tmp
+WORKDIR /app
 
-# Copy the fat JAR built by Gradle into the image
-COPY  build/libs/backend-0.0.1-SNAPSHOT.jar app.jar
+# Copy the jar from the builder stage
+COPY --from=builder /home/app/build/libs/*.jar app.jar
 
-# Expose app port
 EXPOSE 8080
 
-# Run the jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
