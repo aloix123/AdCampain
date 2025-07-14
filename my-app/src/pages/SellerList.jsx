@@ -1,4 +1,3 @@
-// pages/SellerList.jsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -6,9 +5,10 @@ export default function SellerList() {
   const [sellers, setSellers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const API_URL = "https://adcampain.onrender.com";
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/v1/seller")
+    fetch(`${API_URL}/api/v1/seller`)  // <-- correct backticks here
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch sellers");
         return res.json();

@@ -9,16 +9,17 @@ export default function UpdateCampaignForm({ campaigns, products, onUpdateCampai
   const [townsList, setTownsList] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const API_URL = 'https://adcampain.onrender.com';
 
   // Fetch keywords & towns
   useEffect(() => {
-    fetch("http://localhost:8080/api/v1/campaign/keyword")
+    fetch(`${API_URL}/api/v1/campaign/keyword`)
       .then((res) => res.text())
       .then((text) => text ? JSON.parse(text) : [])
       .then(setKeywordsList)
       .catch(console.error);
 
-    fetch("http://localhost:8080/api/v1/campaign/town")
+    fetch(`${API_URL}/api/v1/campaign/town`)
       .then((res) => res.text())
       .then((text) => text ? JSON.parse(text) : [])
       .then(setTownsList)
@@ -42,6 +43,8 @@ export default function UpdateCampaignForm({ campaigns, products, onUpdateCampai
       });
       setUpdatedData(null); // clear previous update preview
       setError(null);
+    } else {
+      setForm(null);
     }
   }, [selectedId, campaigns, products]);
 
@@ -56,51 +59,48 @@ export default function UpdateCampaignForm({ campaigns, products, onUpdateCampai
     setForm((f) => ({ ...f, keywords: f.keywords.filter((k) => k !== kw) }));
   };
 
- const filteredKeywords = form
-   ? keywordsList.filter(
-       (kw) => kw.includes(typedKeyword) && !form.keywords.includes(kw)
-     )
-   : [];
+  const filteredKeywords = form
+    ? keywordsList.filter(
+        (kw) => kw.includes(typedKeyword) && !form.keywords.includes(kw)
+      )
+    : [];
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
 
- const handleSubmit = async (e) => {
-   e.preventDefault();
-   setSubmitting(true);
-   setError(null);
+    try {
+      const res = await fetch(`${API_URL}/api/v1/campaign`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-   try {
-     const res = await fetch("http://localhost:8080/api/v1/campaign", {
-       method: "PUT",
-       headers: { "Content-Type": "application/json" },
-       body: JSON.stringify(form),
-     });
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : null;
 
-     const text = await res.text();
-     const data = text ? JSON.parse(text) : null;
+      if (!res.ok) {
+        let errorMessage = "";
+        if (data?.message && typeof data.message === "object") {
+          errorMessage = Object.entries(data.message)
+            .map(([field, msg]) => `${field}: ${msg}`)
+            .join(", ");
+        } else {
+          errorMessage = data?.message || "Update failed.";
+        }
+        throw new Error(errorMessage);
+      }
 
-     if (!res.ok) {
-       // Parse message object if needed
-       let errorMessage = "";
-       if (data?.message && typeof data.message === "object") {
-         errorMessage = Object.entries(data.message)
-           .map(([field, msg]) => `${field}: ${msg}`)
-           .join(", ");
-       } else {
-         errorMessage = data?.message || "Update failed.";
-       }
-       throw new Error(errorMessage);
-     }
-
-     setUpdatedData(data);
-     onUpdateCampaign(data);
-     alert("Campaign updated!");
-   } catch (err) {
-     setError(err.message);
-   } finally {
-     setSubmitting(false);
-   }
- };
-
+      setUpdatedData(data);
+      onUpdateCampaign(data);
+      alert("Campaign updated!");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="bg-white p-4 rounded shadow mt-6">

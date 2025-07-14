@@ -17,15 +17,15 @@ export default function SellerDetail() {
   const [error, setError] = useState(null);
   const [balance, setBalance] = useState(null);
   const [refreshSellerInfo, setRefreshSellerInfo] = useState(0);
-
+  const API_URL = 'https://adcampain.onrender.com';
   // Fetch seller, products, campaigns
   useEffect(() => {
     const fetchAll = async () => {
       try {
         const [sellerRes, productRes, campaignRes] = await Promise.all([
-          fetch(`http://localhost:8080/api/v1/seller/${id}`),
-          fetch(`http://localhost:8080/api/v1/product?sellerId=${id}`),
-          fetch(`http://localhost:8080/api/v1/campaign/${id}`)
+          fetch(`${API_URL}/api/v1/seller/${id}`),
+          fetch(`${API_URL}/api/v1/product?sellerId=${id}`),
+          fetch(`${API_URL}/api/v1/campaign/${id}`)
         ]);
 
         if (!sellerRes.ok) throw new Error("Failed to load seller.");

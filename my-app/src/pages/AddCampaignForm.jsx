@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function AddCampaignForm({ sellerId, onNewCampaign, products }) {
+  const API_URL = 'https://adcampain.onrender.com';
   const [keywordsList, setKeywordsList] = useState([]);
   const [townsList, setTownsList] = useState([]);
   const [form, setForm] = useState({
@@ -20,7 +21,7 @@ export default function AddCampaignForm({ sellerId, onNewCampaign, products }) {
   useEffect(() => {
     const fetchKeywords = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/v1/campaign/keyword");
+        const res = await fetch(`${API_URL}/api/v1/campaign/keyword`);
         const text = await res.text();
         if (!res.ok) {
           const error = text ? JSON.parse(text) : { message: "Failed to load keywords" };
@@ -35,7 +36,7 @@ export default function AddCampaignForm({ sellerId, onNewCampaign, products }) {
 
     const fetchTowns = async () => {
       try {
-        const res = await fetch("http://localhost:8080/api/v1/campaign/town");
+        const res = await fetch(`${API_URL}/api/v1/campaign/town`);
         const text = await res.text();
         if (!res.ok) {
           const error = text ? JSON.parse(text) : { message: "Failed to load towns" };
@@ -68,51 +69,48 @@ export default function AddCampaignForm({ sellerId, onNewCampaign, products }) {
     setErrors(null);
     setSubmitting(true);
 
-  try {
-    const res = await fetch(`http://localhost:8080/api/v1/campaign`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch(`${API_URL}/api/v1/campaign`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-    const text = await res.text();
+      const text = await res.text();
 
-    if (!res.ok) {
-      const errorResponse = text ? JSON.parse(text) : { message: "Unknown error" };
+      if (!res.ok) {
+        const errorResponse = text ? JSON.parse(text) : { message: "Unknown error" };
+        let errorMessage = "";
 
-      // If the message is an object, convert it to string
-      let errorMessage = "";
-      if (typeof errorResponse.message === "object" && errorResponse.message !== null) {
-        errorMessage = Object.entries(errorResponse.message)
-          .map(([field, msg]) => `${field}: ${msg}`)
-          .join(", ");
-      } else {
-        errorMessage = errorResponse.message || "Unknown error";
+        if (typeof errorResponse.message === "object" && errorResponse.message !== null) {
+          errorMessage = Object.entries(errorResponse.message)
+            .map(([field, msg]) => `${field}: ${msg}`)
+            .join(", ");
+        } else {
+          errorMessage = errorResponse.message || "Unknown error";
+        }
+
+        throw new Error(errorMessage);
       }
 
-      throw new Error(errorMessage);
+      const newCampaign = text ? JSON.parse(text) : {};
+      onNewCampaign(newCampaign);
+
+      setForm({
+        name: "",
+        bidAmount: "3",
+        campaignFund: "",
+        status: "ON",
+        town: "",
+        keywords: [],
+        radius: "",
+        productDTO: null,
+      });
+    } catch (err) {
+      setErrors(err.message || "Unexpected error");
+    } finally {
+      setSubmitting(false);
     }
-
-    const newCampaign = text ? JSON.parse(text) : {};
-
-    onNewCampaign(newCampaign);
-
-    setForm({
-      name: "",
-      bidAmount: "3",
-      campaignFund: "",
-      status: "ON",
-      town: "",
-      keywords: [],
-      radius: "",
-      productDTO: null,
-    });
-  } catch (err) {
-    setErrors(err.message || "Unexpected error");
-  } finally {
-    setSubmitting(false);
-  }
-
   };
 
   const filteredKeywords = keywordsList.filter(
@@ -248,7 +246,7 @@ export default function AddCampaignForm({ sellerId, onNewCampaign, products }) {
                 productDTO: {
                   id: selectedProduct.id,
                   name: selectedProduct.name,
-                  sellerId: sellerId, // ✅ use the actual product's sellerId
+                  sellerId: sellerId,
                 },
               }));
             } else {

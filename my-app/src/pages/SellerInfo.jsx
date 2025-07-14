@@ -1,4 +1,3 @@
-// components/SellerDetail/SellerInfo.jsx
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -6,12 +5,13 @@ export default function SellerInfo({ seller, balance, setBalance, refresh }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [localSeller, setLocalSeller] = useState(seller);
+  const API_URL = 'https://adcampain.onrender.com';
 
   // Refetch seller data when 'refresh' changes
   useEffect(() => {
     const fetchSeller = async () => {
       try {
-        const res = await fetch(`http://localhost:8080/api/v1/seller/${seller.id}`);
+        const res = await fetch(`${API_URL}/api/v1/seller/${seller.id}`);
         if (!res.ok) throw new Error("Failed to fetch seller info.");
         const data = await res.json();
         setLocalSeller(data);
@@ -32,7 +32,7 @@ export default function SellerInfo({ seller, balance, setBalance, refresh }) {
 
     try {
       const res = await fetch(
-        `http://localhost:8080/api/v1/seller/money/${seller.id}`,
+        `${API_URL}/api/v1/seller/money/${seller.id}`,  // <-- corrected backticks here
         { method: "PUT" }
       );
 

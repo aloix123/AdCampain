@@ -1,15 +1,15 @@
-// components/SellerDetail/CampaignTable.jsx
 import { useState } from "react";
 
 export default function CampaignTable({ campaigns, onDelete }) {
   const [deletingId, setDeletingId] = useState(null);
+  const API_URL = 'https://adcampain.onrender.com';
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this campaign?")) return;
 
     setDeletingId(id);
     try {
-      const res = await fetch(`http://localhost:8080/api/v1/campaign/${id}`, {
+      const res = await fetch(`${API_URL}/api/v1/campaign/${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete campaign");
