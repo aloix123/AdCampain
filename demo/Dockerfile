@@ -2,14 +2,14 @@
 # Use Amazon Corretto 21 as base image
 FROM amazoncorretto:21
 
-# Add a volume pointing to /tmp (optional)
+# Optional: temp dir for JVM
 VOLUME /tmp
 
-# Copy the application JAR file into the image
-COPY target/*.jar app.jar
+# Copy the fat JAR built by Gradle into the image
+COPY build/libs/*.jar app.jar
 
-# Expose the port your app runs on (e.g., 8080)
+# Expose app port
 EXPOSE 8080
 
-# Run the JAR file
+# Run the jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
