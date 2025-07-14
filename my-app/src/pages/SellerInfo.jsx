@@ -5,7 +5,7 @@ export default function SellerInfo({ seller, balance, setBalance, refresh }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [localSeller, setLocalSeller] = useState(seller);
-  const API_URL =process.env.REACT_APP_BACKEND_URL;
+  const API_URL ='https://adcampain.onrender.com';
 
   // Refetch seller data when 'refresh' changes
   useEffect(() => {

@@ -17,7 +17,7 @@ export default function SellerDetail() {
   const [error, setError] = useState(null);
   const [balance, setBalance] = useState(null);
   const [refreshSellerInfo, setRefreshSellerInfo] = useState(0);
-  const API_URL = process.env.REACT_APP_BACKEND_URL;
+  const API_URL = 'https://adcampain.onrender.com';
   // Fetch seller, products, campaigns
   useEffect(() => {
     const fetchAll = async () => {

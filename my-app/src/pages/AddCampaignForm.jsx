@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function AddCampaignForm({ sellerId, onNewCampaign, products }) {
-  const API_URL =process.env.REACT_APP_BACKEND_URL;
+  const API_URL ='https://adcampain.onrender.com';
   const [keywordsList, setKeywordsList] = useState([]);
   const [townsList, setTownsList] = useState([]);
   const [form, setForm] = useState({
