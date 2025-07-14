@@ -1,3 +1,5 @@
+
+
 package com.example.demo.config;
 
 // CorsConfig.java
@@ -16,11 +18,10 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("*")
+                        .allowedOrigins("https://ad-campain.vercel.app")
                         .allowedMethods("*")
                         .allowedHeaders("*");
             }
         };
     }
 }
-
