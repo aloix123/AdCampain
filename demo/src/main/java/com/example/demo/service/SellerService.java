@@ -47,4 +47,24 @@ public class SellerService {
         sellerRepository.save(seller);
         return  seller.getEmeraldBalance();
     }
+
+    public void updateSellerAccountAfterUpdateBySellerId(Long sellerId, BigDecimal oldFund, BigDecimal newFund) {
+        Seller seller = sellerRepository.getSellerById(sellerId)
+                .orElseThrow(() -> new EntityNotFoundException("Seller not found"));
+        System.out.println("oldFund"+ oldFund);
+        System.out.println("new fund"+ newFund);
+
+        BigDecimal delta = newFund.subtract(oldFund);
+        System.out.println("delta"+delta);
+        BigDecimal newBalance = seller.getEmeraldBalance().subtract(delta);
+        System.out.println("new balance"+newBalance);
+
+        if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new NoMoneyException("Insufficient funds for campaign update");
+        }
+        System.out.println(" data has been updates!!!"+newBalance);
+        seller.setEmeraldBalance(newBalance);
+        sellerRepository.save(seller);
+    }
+
 }

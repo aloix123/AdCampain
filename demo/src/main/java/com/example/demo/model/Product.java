@@ -15,7 +15,7 @@ public class Product {
     @Column(unique = true)
     private String name;
 
-    Product(){}
+    public Product(){}
     public Product(String name, Seller seller) {
         this.name = name;
         this.seller = seller;

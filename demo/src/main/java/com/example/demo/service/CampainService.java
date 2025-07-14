@@ -13,7 +13,6 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,31 +31,39 @@ public class CampainService {
 
     public CampaignDTO createAdCampaign(CampaignRequestDTO dto) {
         Product product = productService.findById(dto.getProductDTO().getId());
-        if(productService.checkIfProductIsUnchanged(product,dto.getProductDTO())){
-            Campaign campaign=CampaignMapper.toEntity(dto);
+
+        if (productService.checkIfProductIsUnchanged(product, dto.getProductDTO())) {
+            Campaign campaign = CampaignMapper.toEntity(dto);
             campaign.setProduct(product);
-            sellerService.updateSellerAccountBySellerId(product.getSeller().getId(),campaign.getCampaignFund());
+
+            sellerService.updateSellerAccountBySellerId(product.getSeller().getId(), campaign.getCampaignFund());
+
             campaignRepository.save(campaign);
             return CampaignMapper.toDTO(campaign);
-        }
-        else{
+        } else {
             throw new ProductDataIsInwalidException();
         }
-
     }
-
     public void deleteCampaignById(Long id) {
-        Campaign campaign =findById(id);
+        if (!campaignRepository.existsById(id)) {
+            throw new EntityNotFoundException("Campaign with id " + id + " does not exist.");
+        }
         campaignRepository.deleteById(id);
     }
 
     public CampaignDTO updateCampaign(@Valid CampaignDTO dto) {
         Campaign existingCampaign = findById(dto.getId());
         Product product = productService.findById(dto.getProductDTO().getId());
-        CampaignMapper.updateEntity(existingCampaign,dto,product);
+
+        sellerService.updateSellerAccountAfterUpdateBySellerId(
+                dto.getProductDTO().getSellerId(),
+                existingCampaign.getCampaignFund(),
+                dto.getCampaignFund()
+        );
+
+        CampaignMapper.updateEntity(existingCampaign, dto, product);
         campaignRepository.save(existingCampaign);
         return CampaignMapper.toDTO(existingCampaign);
-
     }
 
     public Campaign findById(Long id){
@@ -81,7 +88,7 @@ public class CampainService {
 
     public List<String> getAllTowns() {
         return Arrays.stream(Town.values())
-                .map(Enum::name) // Converts each enum constant to its string name
+                .map(Enum::name)
                 .collect(Collectors.toList());
     }
 }
