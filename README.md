@@ -17,12 +17,10 @@
 - Spring Boot
 - Gradle
 - REST API
-- CORS Configuration
 - **Deployment**: [Render](https://render.com)
 
 ### Frontend:
 - React (with Hooks)
-- Axios
 - Tailwind CSS
 - React Router
 - **Deployment**: [Vercel](https://vercel.com)
