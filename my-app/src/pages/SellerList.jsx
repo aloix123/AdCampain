@@ -5,7 +5,7 @@ export default function SellerList() {
   const [sellers, setSellers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const API_URL = "http://localhost:8080";
+  const API_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/seller`)  // <-- correct backticks here
