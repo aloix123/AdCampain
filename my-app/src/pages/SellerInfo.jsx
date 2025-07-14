@@ -1,11 +1,30 @@
 // components/SellerDetail/SellerInfo.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export default function SellerInfo({ seller }) {
-  const [balance, setBalance] = useState(seller.emeraldBalance);
+export default function SellerInfo({ seller, balance, setBalance, refresh }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [localSeller, setLocalSeller] = useState(seller);
+
+  // Refetch seller data when 'refresh' changes
+  useEffect(() => {
+    const fetchSeller = async () => {
+      try {
+        const res = await fetch(`http://localhost:8080/api/v1/seller/${seller.id}`);
+        if (!res.ok) throw new Error("Failed to fetch seller info.");
+        const data = await res.json();
+        setLocalSeller(data);
+        setBalance(data.emeraldBalance);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    if (refresh !== undefined) {
+      fetchSeller();
+    }
+  }, [refresh, seller.id, setBalance]);
 
   const handleAddMoney = async () => {
     setLoading(true);
@@ -30,7 +49,7 @@ export default function SellerInfo({ seller }) {
 
   return (
     <div className="bg-white rounded shadow p-6 text-center">
-      <h1 className="text-3xl font-bold mb-4">Hi {seller.name}!</h1>
+      <h1 className="text-3xl font-bold mb-4">Hi {localSeller?.name}!</h1>
 
       <p className="text-xl mb-4">
         Your balance is{" "}

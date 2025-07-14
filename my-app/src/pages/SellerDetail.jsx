@@ -15,6 +15,8 @@ export default function SellerDetail() {
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [balance, setBalance] = useState(null);
+  const [refreshSellerInfo, setRefreshSellerInfo] = useState(0);
 
   // Fetch seller, products, campaigns
   useEffect(() => {
@@ -37,6 +39,9 @@ export default function SellerDetail() {
         setSeller(sellerData);
         setProducts(productData);
         setCampaigns(campaignData);
+        setSeller(sellerData);
+        setBalance(sellerData.emeraldBalance); // 👈 add this
+
         console.log(campaignData);
         console.log(products)
       } catch (err) {
@@ -49,9 +54,10 @@ export default function SellerDetail() {
     fetchAll();
   }, [id]);
 
-  const handleNewCampaign = (newCampaign) => {
-    setCampaigns(prev => [...prev, newCampaign]);
-  };
+const handleNewCampaign = (newCampaign) => {
+  setCampaigns(prev => [...prev, newCampaign]);
+  setBalance((prev) => prev - Number(newCampaign.campaignFund)); // 👈 instant update
+};
   const handleDeleteCampaign = (deletedId) => {
     setCampaigns((prev) => prev.filter((c) => c.id !== deletedId));
   };
@@ -66,7 +72,9 @@ export default function SellerDetail() {
       setCampaigns((prev) =>
         prev.map((c) => (c.id === updatedCampaign.id ? updatedCampaign : c))
       );
+       setRefreshSellerInfo((count) => count + 1);
     };
+
 
 
   if (loading) return <div className="p-6">Loading seller details...</div>;
@@ -74,7 +82,7 @@ export default function SellerDetail() {
 
   return (
     <div className="flex flex-col gap-8 p-6">
-      <SellerInfo seller={seller} />
+      <SellerInfo seller={seller}  balance={balance} setBalance={setBalance} refresh={refreshSellerInfo}/>
       <ProductTable products={products} />
       <div className="flex flex-col lg:flex-row gap-6">
           {console.log(products)}
