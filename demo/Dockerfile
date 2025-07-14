@@ -6,7 +6,7 @@ FROM amazoncorretto:21
 VOLUME /tmp
 
 # Copy the fat JAR built by Gradle into the image
-COPY  demo/build/libs/backend-0.0.1-SNAPSHOT.jar app.jar
+COPY  build/libs/backend-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose app port
 EXPOSE 8080
