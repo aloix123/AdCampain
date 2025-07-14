@@ -1,15 +1,15 @@
-FROM ubuntu:latest
-# Use official OpenJDK image
-FROM openjdk:21-jdk-alpine
 
-# Add a volume pointing to /tmp (optional, helps with some JVM temp files)
+# Use Amazon Corretto 21 as base image
+FROM amazoncorretto:21
+
+# Add a volume pointing to /tmp (optional)
 VOLUME /tmp
 
-# Copy the jar file
+# Copy the application JAR file into the image
 COPY target/*.jar app.jar
 
-# Expose the port (optional)
+# Expose the port your app runs on (e.g., 8080)
 EXPOSE 8080
 
-# Run the jar file
-ENTRYPOINT ["java", "-jar", "/gradle-wrapper.jar"]
+# Run the JAR file
+ENTRYPOINT ["java", "-jar", "/app.jar"]
