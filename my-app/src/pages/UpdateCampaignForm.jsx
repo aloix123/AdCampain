@@ -9,7 +9,7 @@ export default function UpdateCampaignForm({ campaigns, products, onUpdateCampai
   const [townsList, setTownsList] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  const API_URL = 'https://adcampain.onrender.com';
+  const API_URL = 'http://localhost:8080';
 
   // Fetch keywords & towns
   useEffect(() => {

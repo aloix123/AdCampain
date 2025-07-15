@@ -17,7 +17,7 @@ public class CorsConfig {
 
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("https://ad-campain.vercel.app/**")
+                registry.addMapping("/**")
                         .allowedOrigins("*")
                         .allowedMethods("*")
                         .allowedHeaders("*");
