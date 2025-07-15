@@ -35,3 +35,17 @@
 - Dynamic keyword and town search from API
 - Real-time update feedback in the UI
 - Clean and responsive interface using modern React practices
+
+---
+
+## 🚀 Quick Start (Run Locally with Docker Compose)
+
+Just copy and paste these commands in your terminal. It will build and run both backend and frontend on your machine:
+
+```bash
+# Clone the repo
+git clone https://github.com/yourusername/AdCampain.git
+cd AdCampain
+
+# Build and start backend + frontend containers
+docker-compose up --build
