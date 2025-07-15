@@ -12,7 +12,7 @@
 
 ## 🚀 Quick Start (Run Locally with Docker Compose)
 
-Just copy and paste these commands in your terminal. It will build and run both backend and frontend on your machine:
+Just copy and paste these commands in your terminal. It will build and run both backend and frontend on your machine:(make sure you have running and installed docker!!)
 
 ```bash
 # Clone the repo
