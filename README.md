@@ -19,6 +19,7 @@ git clone https://github.com/aloix123/AdCampain.git
 cd AdCampain
 docker-compose up --build
 ```
+building those images takes some time !!!
 ---
 
 ## 🛠️ Technologies Used
