@@ -15,11 +15,8 @@
 Just copy and paste these commands in your terminal. It will build and run both backend and frontend on your machine:(make sure you have running and installed docker!!)
 
 ```bash
-# Clone the repo
 git clone https://github.com/yourusername/AdCampain.git
 cd AdCampain
-
-# Build and start backend + frontend containers
 docker-compose up --build
 ```
 ---
