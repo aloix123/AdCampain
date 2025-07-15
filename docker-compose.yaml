@@ -1,0 +1,25 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./demo
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./my-app
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
