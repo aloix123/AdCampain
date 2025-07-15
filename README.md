@@ -1,35 +1,37 @@
+# 🎯 AdCampain
 
-# AdCampain 🎯
-
-Welcome to **AdCampain** — your simple and powerful React app to manage advertising campaigns with ease! 🚀
+**AdCampain** is a simple CRUD web application for creating and managing advertising campaigns, built with **Spring Boot** (Java) on the backend and **React** on the frontend.
 
 ---
-## Visit website her
-https://ad-campain.vercel.app
+
+## 🌐 Live Demo
+
+👉 [Visit Website](https://ad-campain.vercel.app)
+
+---
+
+## 🛠️ Technologies Used
+
+### Backend:
+- Java 21
+- Spring Boot
+- Gradle
+- REST API
+- **Deployment**: [Render](https://render.com)
+
+### Frontend:
+- React (with Hooks)
+- Tailwind CSS
+- React Router
+- **Deployment**: [Vercel](https://vercel.com)
+
+---
+
 ## 🌟 Features
 
-- List, select, and update ad campaigns effortlessly
+- Full CRUD operations for ad campaigns
 - Manage campaign details: name, bid amount, fund, status, town, radius, and keywords
-- Connect campaigns to products
-- Dynamic keyword search and management
-- Real-time update feedback
-- Fetches keywords and towns from API
-- Clean, user-friendly interface with React hooks
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js (v14+ recommended)
-- npm or yarn
-- Access to the API backend (`https://adcampain.onrender.com`)
-
-### Installation
-
-1. Clone the repo:
-
-   ```bash
-   git clone https://github.com/aloix123/AdCampain.git
-   cd AdCampain
+- Associate products with campaigns
+- Dynamic keyword and town search from API
+- Real-time update feedback in the UI
+- Clean and responsive interface using modern React practices
