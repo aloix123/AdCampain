@@ -20,6 +20,8 @@ cd AdCampain
 docker-compose up --build
 ```
 building those images takes some time !!!
+👉 [Visit local Website](http://localhost:3000/)
+👉 [Visit h2 database](http://loclahost:8080/h2-console)
 
 ---
 
